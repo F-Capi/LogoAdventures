@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: greenyellow;
+        }
+
+        #panel {
+            margin: auto;
+            max-width: 1200px;
+            width: 90%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #blocklyDiv {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="toolbox"></div>
+    <div id="panel">
+        <div id="blocklyDiv" style="height: 600px; width: 600px;"></div>
+        <canvas id="LogoCanvas" width="600" height="600"></canvas>
+        <button id="startButton">Start</button>
+
+    </div>
+    <script src="/js/logoController.js"></script>
+    <script src="/node_modules/blockly/blockly.min.js"></script>
+    <script src="/node_modules/blockly/javascript_compressed.js"></script>
+    <script src="/node_modules/blockly/msg/en.js"></script>
+    <script src="/js/generatorBlocks.js"> </script>
+    <script src="/js/loadBlocks.js"></script>
+
+</body>
+
+</html>
