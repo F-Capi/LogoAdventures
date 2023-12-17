@@ -65,30 +65,6 @@ function applyGravity() {
 const RAYCAST_HORIZONTAL_LENGTH = 2; // Ajusta según tus necesidades
 
 
-
-function raycastDownwardCollision() {
-    const rayStartY = player.y + player.radius;
-    // Calcular la posición final después de aplicar la gravedad y el movimiento
-    const rayEndY = rayStartY + player.velocityY;
-
-    for (const platform of platforms) {
-        const platformTopY = Math.max(platform.y1, platform.y2);
-        if (player.x + player.radius > platform.x1 && player.x - player.radius < platform.x2) {
-            // Verificar si la trayectoria del jugador intercepta la plataforma
-            if (rayStartY <= platformTopY && rayEndY >= platformTopY) {
-                player.y = platformTopY - player.radius; // Ajustar la posición y del jugador
-                player.velocityY = 0; // Detener el movimiento hacia abajo
-                player.isGrounded = true;
-                return true;
-            }
-        }
-    }
-    player.isGrounded = false;
-    return false;
-}
-
-
-
 const MAX_SLOPE_THRESHOLD = 2;
 
 
@@ -233,7 +209,9 @@ function draw() {
     // Dibujar plataformas
     ctx.strokeStyle = 'black';
     for (const platform of platforms) {
+
         ctx.beginPath();
+        ctx.lineWidth = 5;
         ctx.moveTo(platform.x1, platform.y1);
         ctx.lineTo(platform.x2, platform.y2);
         ctx.stroke();

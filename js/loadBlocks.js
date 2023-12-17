@@ -62,7 +62,7 @@ var blocks = [{
         {
             "type": "field_number",
             "name": "FD",
-            "value": 0,
+            "value": 50,
             "min": 0,
             "max": 1000
         }
@@ -80,7 +80,7 @@ var blocks = [{
         {
             "type": "field_number",
             "name": "BK",
-            "value": 0,
+            "value": 50,
             "min": 0,
             "max": 1000
         }
@@ -98,7 +98,7 @@ var blocks = [{
         {
             "type": "field_number",
             "name": "RT",
-            "value": 0,
+            "value": 90,
             "min": 0,
             "max": 360
         }
@@ -116,7 +116,7 @@ var blocks = [{
         {
             "type": "field_number",
             "name": "LT",
-            "value": 0,
+            "value": 90,
             "min": 0,
             "max": 360
         }
@@ -145,7 +145,46 @@ var blocks = [{
     "colour": 20,
     "tooltip": "",
     "helpUrl": ""
-}];
+},
+{
+    "type": "pu",
+    "message0": "pu",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 230,
+    "tooltip": "",
+    "helpUrl": ""
+
+},
+{
+    "type": "pd",
+    "message0": "pd",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 230,
+    "tooltip": "",
+    "helpUrl": ""
+
+},
+{
+    "type": "setpensize",
+    "message0": "SETPENSIZE %1",
+    "args0": [
+        {
+            "type": "field_number",
+            "name": "SETPENSIZE",
+            "value": 3,
+            "min": 1,
+            "max": 1000
+        }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 20,
+    "tooltip": "",
+    "helpUrl": ""
+}
+];
 
 Blockly.defineBlocksWithJsonArray(blocks);
 

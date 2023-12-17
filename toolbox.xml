@@ -1,18 +1,25 @@
 <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
   <block type="fd" deletable="true" movable="true" editable="true">
-    <field name="FD">0</field>
+    <field name="FD">50</field>
   </block>
   <block type="bk" deletable="true" movable="true" editable="true">
-    <field name="BK">0</field>
+    <field name="BK">50</field>
   </block>
   <block type="rt" deletable="true" movable="true" editable="true">
-    <field name="RT">0</field>
+    <field name="RT">90</field>
   </block>
   <block type="lt" deletable="true" movable="true" editable="true">
-    <field name="LT">0</field>
+    <field name="LT">90</field>
   </block>
   <block type="color">
     <field name="COLOR">16</field>
+  </block>
+  <block type="pu">
+  </block>
+  <block type="pd">
+  </block>
+  <block type="setpensize">
+    <field name="setpensize">3</field>
   </block>
   <block type="repeat" deletable="true" movable="true" editable="true">
     <field name="REPEAT">1</field>

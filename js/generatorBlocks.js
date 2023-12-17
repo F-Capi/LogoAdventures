@@ -1,8 +1,8 @@
-var loopCounter = 0; // Variable global para llevar la cuenta de los bucles
+var loopCounter = 0;
 
 javascript.javascriptGenerator.forBlock['repeat'] = function (block, generator) {
   var number_repeat = block.getFieldValue('REPEAT');
-  var loopVar = 'count' + loopCounter++; // Genera un nombre de variable único
+  var loopVar = 'count' + loopCounter++;
   var statements_repeat = generator.statementToCode(block, 'REPEAT');
   var code = 'for (var ' + loopVar + ' = 0; ' + loopVar + ' < ' + number_repeat + '; ' + loopVar + '++) {\n' +
     statements_repeat +
@@ -38,7 +38,22 @@ javascript.javascriptGenerator.forBlock['lt'] = function (block, generator) {
 
 
 javascript.javascriptGenerator.forBlock['color'] = function (block, generator) {
-  var color = block.getFieldValue('COLOR');
+  var color = parseInt(block.getFieldValue('COLOR'));
   var code = 'changeColor("' + color + '");\n';
+  return code;
+};
+
+
+javascript.javascriptGenerator.forBlock['pu'] = function (block, generator) {
+  var code = 'tooglePen(false);\n';
+  return code;
+};
+javascript.javascriptGenerator.forBlock['pd'] = function (block, generator) {
+  var code = 'tooglePen(true);\n';
+  return code;
+};
+javascript.javascriptGenerator.forBlock['setpensize'] = function (block, generator) {
+  var size = parseInt(block.getFieldValue('SETPENSIZE'));
+  var code = 'changePenSize("' + size + '");\n';
   return code;
 };
