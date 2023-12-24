@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 console.log("hello fran")
 let platforms = [
     // Sección 1: Inicio con Plataformas Inclinadas
+    { x1: 0, y1: 600, x2: 30, y2: 570 }, { x1: 30, y1: 570, x2: 60, y2: 600 }, { x1: 60, y1: 600, x2: 90, y2: 570 }, { x1: 90, y1: 570, x2: 120, y2: 600 }, { x1: 120, y1: 600, x2: 150, y2: 570 }, { x1: 150, y1: 570, x2: 180, y2: 600 },
     { x1: 50, y1: 400, x2: 150, y2: 380 },
     { x1: 150, y1: 380, x2: 250, y2: 360 },
 
@@ -45,10 +46,10 @@ let player = {
     x: 300,
     y: 0,
     radius: 10,
-    speed: 1,
+    speed: 2,
     velocityY: 0,
-    gravity: 0.3,
-    jumpForce: -10,
+    gravity: 0.8,
+    jumpForce: -8,
     isGrounded: false
 };
 
@@ -200,9 +201,6 @@ function draw() {
 
     detectSlopeCollision();
 
-    platforms[0].y1 += -0.1;
-
-    platforms[0].x2 += -0.1;
     if (player.velocityY < 0) {
         detectCeilingCollision();
     }

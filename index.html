@@ -4,12 +4,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Logo Blocks</title>
+    <style>
+        body {}
+
+        .title-container {
+            margin-top: 20px;
+        }
+
+        #pageTitle {
+            font-size: 40px;
+            font-family: 'RetroFont', sans-serif;
+            color: #000;
+            /* Color sólido para mejorar la legibilidad */
+            background: -webkit-linear-gradient(#f06, #aef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* Usando un gradiente para el texto */
+            text-align: center;
+            margin-bottom: 20px;
+            /* Espacio adicional debajo del título */
+        }
+
+
+        #panel {
+            padding: 10px;
+            margin: auto;
+            max-width: 1200px;
+            width: 90%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1em;
+        }
+
+        #blocklyDiv {
+            width: 100%;
+            max-width: 500px;
+            min-width: 300px;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+        }
+
+        #turtleCanvas,
+        #LogoCanvas {
+            border: 4px solid black;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #turtleCanvas {
+            background-color: transparent;
+        }
+
+        #startButton {
+            background: linear-gradient(to right, #f06, #aef);
+            border: 3px solid #000;
+            border-radius: 10px;
+            box-shadow: 3px 3px 0 #000;
+            color: white;
+            font-family: 'RetroFont', sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        #startButton:hover {
+            background: linear-gradient(to right, #aef, #f06);
+            box-shadow: 5px 5px 0 #000;
+        }
+
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.7em;
+        }
+
+        .retro-checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'RetroFont', sans-serif;
+            font-size: 20px;
+            color: #000;
+            /* Cambiado a negro para mejor visibilidad */
+            margin-left: 20px;
+        }
+
+        .retro-checkbox-label input[type="checkbox"] {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+            cursor: pointer;
+            appearance: none;
+            background: #fff;
+            /* Fondo blanco para el checkbox */
+            border: 3px solid #000;
+            border-radius: 5px;
+            position: relative;
+            /* Necesario para posicionar el tick mark */
+        }
+
+        .retro-checkbox-label input[type="checkbox"]:checked {
+            background: linear-gradient(to right, #f06, #aef);
+            /* Fondo con gradiente */
+        }
+
+        .retro-checkbox-label input[type="checkbox"]:checked::after {
+            content: '✓';
+            /* Carácter de tick mark */
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: #000;
+            /* Color del tick mark */
+        }
+
+        #retroSlider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #f06, #aef);
+            outline: none;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        #retroSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #000;
+            cursor: pointer;
+        }
+
+        #retroSlider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #000;
+            cursor: pointer;
+        }
+
+        .control-panel {
+            width: 200px;
+            display: inline-flex;
+            align-items: center;
+            font-family: 'RetroFont', sans-serif;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .options {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1em;
+        }
+    </style>
+
+    <link rel="icon" type="image/x-icon" href="/favicon-32x32.png">
 </head>
 
-<body><canvas id="gameCanvas" width="800" height="800"></canvas>
-    <script src="js/app.js"></script>
+<body>
+    <div class="title-container center">
+        <h1 id="pageTitle">Logo Blocks</h1>
+    </div>
+
+    <div id="toolbox"></div>
+    <div id="panel">
+        <div class="center">
+            <div id="canvas-container">
+                <canvas id="LogoCanvas" width="500" height="500"></canvas>
+                <canvas id="turtleCanvas" width="500" height="500"></canvas>
+            </div>
+            <div class="options">
+                <button id="startButton">Start</button>
+                <label for="gridCheckbox" class="retro-checkbox-label">
+
+                    Grid
+                    <input type="checkbox" id="gridCheckbox" />
+                </label>
+                <div class="control-panel">
+                    Speed
+                    <input type="range" id="retroSlider" min="1" max="500" step="1" value="250">
+                </div>
+            </div>
+        </div>
+
+
+        <div id="blocklyDiv" style="height: 600px; width: 500px;"></div>
+
+
+
+    </div>
+
+    <script src="/node_modules/blockly/blockly.min.js"></script>
+    <script src="/node_modules/blockly/javascript_compressed.js"></script>
+    <script src="/node_modules/blockly/msg/en.js"></script>
+    <script src="/js/generatorBlocks.js" defer></script>
+    <script src="/js/loadBlocks.js" defer></script>
+    <script src="/js/logoController.js" defer></script>
+
+
 </body>
 
 </html>
