@@ -207,7 +207,7 @@ function loadWorkspace(workspace, filename) {
         .catch(error => console.error('Error:', error));
 }
 
-loadWorkspace(workspace, './workspace.xml');
+loadWorkspace(workspace, '../workspace.xml');
 
 
 function reiniciarBlockly() {
@@ -217,7 +217,7 @@ function reiniciarBlockly() {
     }
 
     // Cargar el nuevo XML del toolbox
-    fetch('./toolbox.xml')
+    fetch('../toolbox.xml')
         .then(response => response.text())
         .then(data => {
             // Crear un nuevo espacio de trabajo con el toolbox actualizado
