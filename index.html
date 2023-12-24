@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logo Blocks</title>
     <style>
-        body {}
-
         .title-container {
             margin-top: 20px;
         }
@@ -38,11 +36,6 @@
             gap: 1em;
         }
 
-        #blocklyDiv {
-            width: 100%;
-            max-width: 500px;
-            min-width: 300px;
-        }
 
         #canvas-container {
             position: relative;
@@ -214,9 +207,15 @@
 
     </div>
 
+    <!-- 
     <script src="/node_modules/blockly/blockly.min.js"></script>
     <script src="/node_modules/blockly/javascript_compressed.js"></script>
     <script src="/node_modules/blockly/msg/en.js"></script>
+-->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/msg/es.js"></script>
+
     <script src="/js/generatorBlocks.js" defer></script>
     <script src="/js/loadBlocks.js" defer></script>
     <script src="/js/logoController.js" defer></script>

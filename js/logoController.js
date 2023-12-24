@@ -18,31 +18,43 @@ let turtle = {
 
 
 const colors = [
-    "white",    // White
-    "yellow",   // Yellow
-    "pink",     // Pink
-    "red",      // Red
-    "gray",     // Gray
-    "blue",     // Blue
-    "green",    // Green
-    "purple",   // Purple
-    "orange",   // Orange
-    "brown",    // Brown
-    "ivory",    // Ivory
-    "darkblue", // Dark Blue
-    "darkcyan", // Dark Cyan
-    "darkgoldenrod", // Dark Golden Rod
-    "darkgreen", // Dark Green
-    "black"   // Dark Red
+    "white",
+    "yellow",
+    "pink",
+    "red",
+    "gray",
+    "blue",
+    "green",
+    "purple",
+    "orange",
+    "brown",
+    "ivory",
+    "darkblue",
+    "darkcyan",
+    "darkgoldenrod",
+    "darkgreen",
+    "black"
 ];
 
 let turtleImage = new Image();
-turtleImage.src = 'turtle2.png';
+turtleImage.src = 'turtle2.png'; let currentExecutionToken;
 
-function delay() {
-    return new Promise(resolve => setTimeout(resolve, turtle.speed));
+function generateExecutionToken() {
+    return Symbol("executionToken");
 }
 
+function delay() {
+    const executionToken = currentExecutionToken;
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (executionToken !== currentExecutionToken) {
+                reject('Execution cancelled');
+            } else {
+                resolve();
+            }
+        }, turtle.speed);
+    });
+}
 function drawGrid() {
     // Guarda el estado actual del canvas
     ctxTurtle.save();
@@ -193,25 +205,24 @@ turtleImage.onload = function () {
     drawBackground();
     dibujarImagen();
 };
-
 document.getElementById('startButton').addEventListener('click', async function () {
-
+    currentExecutionToken = generateExecutionToken(); // Genera un nuevo token
     var startBlock = workspace.getAllBlocks().find(block => block.type === 'start');
     if (!startBlock) {
-
         resetTurtle();
         console.error("No se encontró el bloque 'start'.");
         return;
     }
 
-    // Genera el código solo para los bloques conectados al bloque 'start'
     var code = Blockly.JavaScript.blockToCode(startBlock);
     console.log(code);
     try {
         resetTurtle();
         await eval('(async () => {' + code + '})()');
     } catch (e) {
-        alert('Error en el código generado: ' + e);
+        if (e !== 'Execution cancelled') {
+            alert('Error en el código generado: ' + e);
+        }
     }
 });
 turtleImage.onload = function () {
