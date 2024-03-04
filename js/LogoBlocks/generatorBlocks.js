@@ -1,7 +1,7 @@
 var loopCounter = 0;
 
 javascript.javascriptGenerator.forBlock['repeat'] = function (block, generator) {
-  var number_repeat = block.getFieldValue('REPEAT');
+  var number_repeat = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC) || '0';;
   var loopVar = 'count' + loopCounter++;
   var statements_repeat = generator.statementToCode(block, 'REPEAT');
   var code = 'for (var ' + loopVar + ' = 0; ' + loopVar + ' < ' + number_repeat + '; ' + loopVar + '++) {\n' +
@@ -11,31 +11,39 @@ javascript.javascriptGenerator.forBlock['repeat'] = function (block, generator) 
 };
 
 
-javascript.javascriptGenerator.forBlock['fd'] = function (block, generator) {
-  var number_fd = block.getFieldValue('FD');
+javascript.javascriptGenerator.forBlock['fd'] = function (block) {
+  var number_fd = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC) || '0';
   var code = 'moveForward(' + number_fd + ');\nawait delay();';
   return code;
 };
 
 javascript.javascriptGenerator.forBlock['bk'] = function (block, generator) {
-  var number_bk = block.getFieldValue('BK');
+  var number_bk = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC) || '0';
   var code = 'moveBackwards(' + number_bk + ');\nawait delay();';
   return code;
 };
 
 javascript.javascriptGenerator.forBlock['rt'] = function (block, generator) {
-  var number_rt = block.getFieldValue('RT');
+  var number_rt = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC) || '0';
   var code = 'turnRight(' + number_rt + ');\nawait delay();';
   return code;
 };
 
 javascript.javascriptGenerator.forBlock['lt'] = function (block, generator) {
-  var number_lt = block.getFieldValue('LT');
+  var number_lt = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC) || '0';
   var code = 'turnLeft(' + number_lt + ');\nawait delay();';
   return code;
 };
-
-
+javascript.javascriptGenerator.forBlock['home'] = function (block, generator) {
+  var code = 'home();\n';
+  return code;
+};
+javascript.javascriptGenerator.forBlock['setxy'] = function (block, generator) {
+  var numberx = block.getFieldValue('x');
+  var numbery = block.getFieldValue('y');
+  var code = 'setxy(' + numberx + ',' + numbery + ');\n';
+  return code;
+};
 
 javascript.javascriptGenerator.forBlock['color'] = function (block, generator) {
   var color = parseInt(block.getFieldValue('COLOR'));

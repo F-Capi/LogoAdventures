@@ -23,7 +23,7 @@ var options = {
     scrollbars: true,
     sounds: true,
     oneBasedIndex: true,
-    renderer: "zelos"
+    renderer: 'zelos'
 };
 
 /* Inject your workspace */
@@ -45,11 +45,8 @@ var blocks = [
         "message0": "repeat %1 %2 %3",
         "args0": [
             {
-                "type": "field_number",
-                "name": "REPEAT",
-                "value": 1,
-                "min": 1,
-                "max": 360
+                "type": "input_value",
+                "name": "NAME"
             },
             {
                 "type": "input_end_row"
@@ -67,32 +64,27 @@ var blocks = [
     },
     {
         "type": "fd",
-        "message0": "fd %1",
+        "message0": "FD %1",
         "args0": [
             {
-                "type": "field_number",
-                "name": "FD",
-                "value": 50,
-                "min": 0,
-                "max": 1000
+                "type": "input_value",
+                "name": "NAME"
             }
         ],
         "previousStatement": null,
         "nextStatement": null,
-        "colour": "#4C97FF",
+        "colour": '#4C97FF',
         "tooltip": "",
         "helpUrl": ""
-    },
+    }
+    ,
     {
         "type": "bk",
         "message0": "bk %1",
         "args0": [
             {
-                "type": "field_number",
-                "name": "BK",
-                "value": 50,
-                "min": 0,
-                "max": 1000
+                "type": "input_value",
+                "name": "NAME"
             }
         ],
         "previousStatement": null,
@@ -106,11 +98,8 @@ var blocks = [
         "message0": "rt %1",
         "args0": [
             {
-                "type": "field_number",
-                "name": "RT",
-                "value": 90,
-                "min": 0,
-                "max": 360
+                "type": "input_value",
+                "name": "NAME"
             }
         ],
         "previousStatement": null,
@@ -124,11 +113,43 @@ var blocks = [
         "message0": "lt %1",
         "args0": [
             {
+                "type": "input_value",
+                "name": "NAME"
+            }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": "#4C97FF",
+        "tooltip": "",
+        "helpUrl": ""
+    },
+
+    {
+        "type": "home",
+        "message0": "home",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": "#4C97FF",
+        "tooltip": "",
+        "helpUrl": ""
+    },
+    {
+        "type": "setxy",
+        "message0": "setxy %1 %2",
+        "args0": [
+            {
                 "type": "field_number",
-                "name": "LT",
-                "value": 90,
+                "name": "x",
+                "value": 0,
                 "min": 0,
-                "max": 360
+                "max": 500
+            },
+            {
+                "type": "field_number",
+                "name": "y",
+                "value": 0,
+                "min": 0,
+                "max": 500
             }
         ],
         "previousStatement": null,
@@ -193,9 +214,46 @@ var blocks = [
         "colour": "#9966FF",
         "tooltip": "",
         "helpUrl": ""
+    },
+    {
+        "type": "math_add",
+        "message0": "%1 + %2",
+        "args0": [
+            {
+                "type": "input_value",
+                "name": "A",
+                "check": "Number",
+                "shadow": {
+                    "type": "math_number",
+                    "fields": {
+                        "NUM": 1
+                    }
+                }
+            },
+            {
+                "type": "input_value",
+                "name": "B",
+                "check": "Number",
+                "shadow": {
+                    "type": "math_number",
+                    "fields": {
+                        "NUM": 1
+                    }
+                }
+            }
+        ],
+        "inputsInline": true,
+        "output": "Number",
+        "colour": 230,
+        "tooltip": "",
+        "helpUrl": ""
     }
+
+
 ];
 Blockly.defineBlocksWithJsonArray(blocks);
+
+
 
 function loadWorkspace(workspace, filename) {
     fetch(filename)
@@ -207,7 +265,7 @@ function loadWorkspace(workspace, filename) {
         .catch(error => console.error('Error:', error));
 }
 
-loadWorkspace(workspace, 'workspace.xml');
+loadWorkspace(workspace, '/../../xml/workspace.xml');
 
 
 function reiniciarBlockly() {
@@ -217,7 +275,7 @@ function reiniciarBlockly() {
     }
 
     // Cargar el nuevo XML del toolbox
-    fetch('toolbox.xml')
+    fetch('/../../xml/toolbox.xml')
         .then(response => response.text())
         .then(data => {
             // Crear un nuevo espacio de trabajo con el toolbox actualizado

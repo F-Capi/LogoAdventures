@@ -1,6 +1,5 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-console.log("hello fran")
 let platforms = [
     // Sección 1: Inicio con Plataformas Inclinadas
     { x1: 0, y1: 600, x2: 30, y2: 570 }, { x1: 30, y1: 570, x2: 60, y2: 600 }, { x1: 60, y1: 600, x2: 90, y2: 570 }, { x1: 90, y1: 570, x2: 120, y2: 600 }, { x1: 120, y1: 600, x2: 150, y2: 570 }, { x1: 150, y1: 570, x2: 180, y2: 600 },
@@ -45,25 +44,26 @@ let platforms = [
 let player = {
     x: 300,
     y: 0,
-    radius: 10,
-    speed: 2,
+    radius: 12,
+    speed: 100,
     velocityY: 0,
-    gravity: 0.8,
-    jumpForce: -8,
-    isGrounded: false
+    gravity: 900,
+    jumpForce: -300,
+    isGrounded: false,
+
 };
 
 
-let originalPlatforms = JSON.parse(JSON.stringify(platforms));
-let originalPlayer = JSON.parse(JSON.stringify(player));
+function applyGravity(deltaTime) {
+    if (!player.isGrounded) {
 
-function applyGravity() {
-    player.velocityY += player.gravity;
-    player.y += player.velocityY;
+        player.velocityY += player.gravity * deltaTime;
+        player.y += player.velocityY * deltaTime;
+    }
 }
 
 
-const RAYCAST_HORIZONTAL_LENGTH = 2; // Ajusta según tus necesidades
+const RAYCAST_HORIZONTAL_LENGTH = 5;
 
 
 const MAX_SLOPE_THRESHOLD = 2;
@@ -94,8 +94,8 @@ function raycastVerticalCollision(direction) {
 
 
 
-function movePlayer(direction) {
-    player.x += direction * player.speed;
+function movePlayer(direction, deltaTime) {
+    player.x += direction * player.speed * deltaTime;
 }
 
 
@@ -108,15 +108,17 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
     keysPressed[e.code] = false;
 });
-const jumpCooldown = 300; // Cooldown en milisegundos, ajusta según sea necesario
+const jumpCooldown = 100; // Cooldown en milisegundos, ajusta según sea necesario
 let lastJumpTime = 0;
 
-function handlePlayerInput() {
+
+
+function handlePlayerInput(deltaTime) {
     if (keysPressed['ArrowLeft'] && !raycastVerticalCollision(-1)) {
-        movePlayer(-1);
+        movePlayer(-1, deltaTime);
     }
     if (keysPressed['ArrowRight'] && !raycastVerticalCollision(1)) {
-        movePlayer(1);
+        movePlayer(1, deltaTime);
     }
     const currentTime = Date.now();
     if (keysPressed['Space'] && player.isGrounded && currentTime - lastJumpTime > jumpCooldown) {
@@ -125,15 +127,13 @@ function handlePlayerInput() {
         lastJumpTime = currentTime;
     }
 }
-
 function detectCeilingCollision() {
     if (player.velocityY >= 0) {
-        player.isTouchingCeiling = false;
-        return false;
+        return false; // No verificar colisiones si el jugador se mueve hacia abajo
     }
 
     const rayStartY = player.y - player.radius;
-    const rayEndY = rayStartY - 10; // Ajusta según la mecánica de tu juego
+    const rayEndY = rayStartY - 10; // Ajusta según sea necesario
 
     for (const platform of platforms) {
         let startX = Math.min(platform.x1, platform.x2);
@@ -141,15 +141,13 @@ function detectCeilingCollision() {
         let startY = (startX === platform.x1) ? platform.y1 : platform.y2;
         let endY = (endX === platform.x2) ? platform.y2 : platform.y1;
 
-        // Ahora calcula la pendiente y la intersección y
         const dx = endX - startX;
         const dy = endY - startY;
         const m = dy / dx;
         const b = startY - m * startX;
         const yOnPlatform = m * player.x + b;
 
-        // Ajusta la condición para detectar colisiones solo cuando el jugador está realmente cerca del techo
-        if (player.x + player.radius > platform.x1 && player.x - player.radius < platform.x2 && rayEndY <= yOnPlatform && player.y - player.radius > yOnPlatform - 20) {
+        if (player.x + player.radius > startX && player.x - player.radius < endX && rayEndY <= yOnPlatform && player.y - player.radius > yOnPlatform - 10) { // Ajusta este valor
             player.velocityY = 0; // Detiene el movimiento vertical
             return true;
         }
@@ -165,7 +163,6 @@ function detectSlopeCollision() {
     player.isGrounded = false;
 
     for (const platform of platforms) {
-        // Normaliza los puntos de la plataforma
         let [leftX, leftY, rightX, rightY] = platform.x1 < platform.x2 ?
             [platform.x1, platform.y1, platform.x2, platform.y2] :
             [platform.x2, platform.y2, platform.x1, platform.y1];
@@ -174,8 +171,6 @@ function detectSlopeCollision() {
         const dy = rightY - leftY;
         const slope = dy / dx;
         const yIntercept = leftY - slope * leftX;
-
-        // Calcula la y esperada en la plataforma para la x actual del jugador
         const yOnPlatform = slope * player.x + yIntercept;
 
         if (player.x >= leftX && player.x <= rightX) {
@@ -190,33 +185,49 @@ function detectSlopeCollision() {
     }
 }
 
+let lastFrameTime = Date.now();
 
+function gameLoop() {
+    const currentTime = Date.now();
+    const deltaTime = (currentTime - lastFrameTime) / 1000;
 
+    update(deltaTime);
+    draw();
+    lastFrameTime = currentTime;
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    requestAnimationFrame(gameLoop);
+}
 
-    handlePlayerInput();
-    applyGravity();
+gameLoop();
+
+function update(deltaTime) {
+    handlePlayerInput(deltaTime);
+    applyGravity(deltaTime);
 
     detectSlopeCollision();
-
     if (player.velocityY < 0) {
         detectCeilingCollision();
     }
+}
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#303030';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     // Dibujar plataformas
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = '#ff6700';
+    ctx.lineWidth = 10;
+    ctx.lineCap = "round";
     for (const platform of platforms) {
 
         ctx.beginPath();
-        ctx.lineWidth = 5;
         ctx.moveTo(platform.x1, platform.y1);
         ctx.lineTo(platform.x2, platform.y2);
         ctx.stroke();
     }
 
     // Dibujar jugador
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = '#39ff14';
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
     ctx.fill();
@@ -226,14 +237,18 @@ function draw() {
     ctx.font = '20px Arial';
     ctx.fillText(`isGrounded: ${player.isGrounded}`, 10, 30);
 
-    requestAnimationFrame(draw);
+
+
 }
 
-draw();
 
-// Definir proporciones o dimensiones base
-const baseWidth = 800; // Ancho base del canvas
-const baseHeight = 800; // Alto base del canvas
+
+
+let originalPlatforms = JSON.parse(JSON.stringify(platforms));
+let originalPlayer = JSON.parse(JSON.stringify(player));
+
+const baseWidth = 1024;
+const baseHeight = 576; // Alto base del canvas
 
 let scaleRatio = 1;
 
@@ -252,7 +267,12 @@ function resetToOriginalSizes() {
 function scaleGameElements() {
     const scaleFactor = calculateScaleFactor();
 
+    // Guarda la posición actual del jugador antes de restablecer
+    let currentPlayerX = player.x / scaleRatio; // Asegúrate de desescalar la posición actual antes de volver a escalar
+    let currentPlayerY = player.y / scaleRatio; // Asegúrate de desescalar la posición actual antes de volver a escalar
+
     resetToOriginalSizes();
+
     // Escalar plataformas
     platforms.forEach(platform => {
         platform.x1 *= scaleFactor;
@@ -261,22 +281,24 @@ function scaleGameElements() {
         platform.y2 *= scaleFactor;
     });
 
-    // Escalar propiedades del jugador
-    player.x *= scaleFactor;
-    player.y *= scaleFactor;
-    player.radius *= scaleFactor;
-    player.speed *= scaleFactor;
-    player.gravity = originalPlayer.gravity * scaleFactor;
-    player.jumpForce = originalPlayer.jumpForce * scaleFactor;
 
-    // Asegúrate de que otros elementos del juego también se escalen adecuadamente
+    // Escalar propiedades del jugador
+    player.x = currentPlayerX * scaleFactor; // Reescala la posición guardada
+    player.y = currentPlayerY * scaleFactor; // Reescala la posición guardada
+    player.radius = player.radius * scaleFactor; // Escalar para propósitos visuales
+
+    player.speed = player.speed * scaleFactor;
+    player.gravity = player.gravity * scaleFactor;
+    player.jumpForce = player.jumpForce * scaleFactor;
+    ctx.lineWidth = ctx.lineWidth * scaleFactor;
+    scaleRatio = scaleFactor; // Actualiza el factor de escala global
 }
 
 
 
 function resizeCanvas() {
-    let newWidth = Math.max(window.innerWidth, 420);
-    newWidth = Math.min(newWidth, 800);
+    let newWidth = Math.max(window.innerWidth, 350);
+    newWidth = Math.min(newWidth, 1024);
 
     const aspectRatio = baseHeight / baseWidth;
     let newHeight = newWidth * aspectRatio;
@@ -284,7 +306,7 @@ function resizeCanvas() {
     canvas.width = newWidth;
     canvas.height = newHeight;
 
-    scaleGameElements(); // Escalar elementos del juego
+    scaleGameElements();
 }
 
 window.addEventListener('resize', resizeCanvas);

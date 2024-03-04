@@ -1,16 +1,16 @@
 let logoCanvas = document.getElementById("LogoCanvas");
-let ctx = logoCanvas.getContext('2d');
+let ctxDrawing = logoCanvas.getContext('2d');
 
 let turtleCanvas = document.getElementById("turtleCanvas");
 let ctxTurtle = turtleCanvas.getContext('2d'); // Co
 
 let turtle = {
-    posX: Math.round(logoCanvas.clientWidth / 2),
-    posY: Math.round(logoCanvas.clientHeight / 2),
+    posX: turtleCanvas.clientWidth / 2,
+    posY: turtleCanvas.clientHeight / 2,
     radius: 15,
     direction: 90,
     pen: true,
-    color: "black",
+    color: "#00d4ff",
     pensize: 3,
     grid: null,
     speed: null
@@ -37,7 +37,9 @@ const colors = [
 ];
 
 let turtleImage = new Image();
-turtleImage.src = 'turtle2.png'; let currentExecutionToken;
+turtleImage.src = '/../../images/turtle2.png';
+
+let currentExecutionToken;
 
 function generateExecutionToken() {
     return Symbol("executionToken");
@@ -58,8 +60,6 @@ function delay() {
 function drawGrid() {
     // Guarda el estado actual del canvas
     ctxTurtle.save();
-
-
     // Dibuja la cuadrícula
     ctxTurtle.beginPath();
     for (var x = 0; x <= turtleCanvas.width; x += 50) {
@@ -83,9 +83,11 @@ function dibujarImagen() {
     const scaleFactor = 0.7;
 
     ctxTurtle.clearRect(0, 0, turtleCanvas.width, turtleCanvas.height);
+
     if (turtle.grid) {
         drawGrid();
     }
+
     var x = turtle.posX;
     var y = turtle.posY;
     ctxTurtle.save();
@@ -112,21 +114,20 @@ function radiansToDegrees(angle) {
 
 function drawBackground() {
 
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, logoCanvas.width, logoCanvas.height);
+    ctxDrawing.fillStyle = 'white';
+    ctxDrawing.fillRect(0, 0, logoCanvas.width, logoCanvas.height);
 }
 
 function resetTurtle() {
     turtle.posX = Math.round(logoCanvas.clientWidth / 2);
     turtle.posY = Math.round(logoCanvas.clientHeight / 2);
-    turtle.color = "black";
     turtle.pen = true;
     turtle.pensize = 3;
     turtle.direction = 90;
 
-    ctx.clearRect(0, 0, logoCanvas.width, logoCanvas.height);
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, logoCanvas.width, logoCanvas.height);
+    ctxDrawing.clearRect(0, 0, logoCanvas.width, logoCanvas.height);
+    ctxDrawing.fillStyle = 'white';
+    ctxDrawing.fillRect(0, 0, logoCanvas.width, logoCanvas.height);
 
 
     dibujarImagen();
@@ -138,42 +139,42 @@ function moveForward(steps) {
     let deltaY = -steps * Math.sin(degreesToRadians(turtle.direction));
 
 
-    ctx.beginPath();
-    ctx.moveTo(turtle.posX, turtle.posY);
+    ctxDrawing.beginPath();
+    ctxDrawing.moveTo(turtle.posX, turtle.posY);
 
     turtle.posX += deltaX;
     turtle.posY += deltaY;
 
     if (turtle.pen) {
 
-        ctx.lineWidth = turtle.pensize;
-        ctx.strokeStyle = turtle.color;
-        ctx.lineTo(turtle.posX, turtle.posY);
-        ctx.stroke();
+        ctxDrawing.lineWidth = turtle.pensize;
+        ctxDrawing.strokeStyle = turtle.color;
+        ctxDrawing.lineTo(turtle.posX, turtle.posY);
+        ctxDrawing.stroke();
     }
 
-    ctx.closePath();
+    ctxDrawing.closePath();
     dibujarImagen();
 }
 function moveBackwards(steps) {
     let deltaX = -steps * Math.cos(degreesToRadians(turtle.direction));
     let deltaY = steps * Math.sin(degreesToRadians(turtle.direction));
 
-    ctx.beginPath();
-    ctx.moveTo(turtle.posX, turtle.posY);
+    ctxDrawing.beginPath();
+    ctxDrawing.moveTo(turtle.posX, turtle.posY);
 
     turtle.posX += deltaX;
     turtle.posY += deltaY;
 
     if (turtle.pen) {
 
-        ctx.lineWidth = turtle.pensize;
-        ctx.strokeStyle = turtle.color;
-        ctx.lineTo(turtle.posX, turtle.posY);
-        ctx.stroke();
+        ctxDrawing.lineWidth = turtle.pensize;
+        ctxDrawing.strokeStyle = turtle.color;
+        ctxDrawing.lineTo(turtle.posX, turtle.posY);
+        ctxDrawing.stroke();
     }
 
-    ctx.closePath();
+    ctxDrawing.closePath();
     dibujarImagen();
 }
 
@@ -187,6 +188,18 @@ function turnRight(angle) {
 function turnLeft(angle) {
     turtle.direction += angle;
     turtle.direction = turtle.direction % 360;
+    dibujarImagen();
+}
+
+function home() {
+    turtle.posX = Math.round(logoCanvas.clientWidth / 2);
+    turtle.posY = Math.round(logoCanvas.clientHeight / 2);
+    turtle.direction = 90;
+    dibujarImagen();
+}
+function setxy(x, y) {
+    turtle.posX = x;
+    turtle.posY = y;
     dibujarImagen();
 }
 function tooglePen(value) {
@@ -207,6 +220,8 @@ turtleImage.onload = function () {
 };
 document.getElementById('startButton').addEventListener('click', async function () {
     currentExecutionToken = generateExecutionToken(); // Genera un nuevo token
+
+
     var startBlock = workspace.getAllBlocks().find(block => block.type === 'start');
     if (!startBlock) {
         resetTurtle();
