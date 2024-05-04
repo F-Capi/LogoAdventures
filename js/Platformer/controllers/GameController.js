@@ -50,6 +50,7 @@ function inputs(deltaTime) {
     }
 }
 
+
 let loader = new Loader();
 loader.addImage("player", "../artArchive/spritesheet.png");
 loader.addImage("computer", "../artArchive/computer.png");
@@ -81,8 +82,6 @@ window.onload = function () {
 
         lastFrameTime = Date.now();
         gameLoop();
-
     });
-
 }
 

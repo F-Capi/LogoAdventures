@@ -207,7 +207,6 @@ export class PhysicsEngine {
         return start + (end - start) * alpha;
     }
     detectSlopeCollision(player, deltaTime) {
-        player.speed = 100;
         if (player.velocityY < 0) {
             return false; // Si el jugador está subiendo, ignora la colisión hacia abajo.
         }
@@ -235,7 +234,7 @@ export class PhysicsEngine {
                         slopeCollisionDetected = true;
                         player.canJump = false;
                         player.x += slideDirection * 100 * deltaTime; // Mantiene la lógica de deslizamiento
-                        player.speed *= 0.9 * deltaTime;
+                        //player.speed *= 0.9 * deltaTime;
                         // Aplica suavizado al ajuste de la posición y
                         player.y = this.lerp(player.y, yOnPlatform - player.radius, deltaTime * 5); // Ajusta este valor según sea necesario
                         break;
