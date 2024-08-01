@@ -9,9 +9,17 @@ export class Resizer {
         this.originalPlatforms = JSON.parse(JSON.stringify(platformManager.platforms));
         this.baseWidth = 576;
         this.baseHeight = 576;
+        this.rectangularWidth = 1920;  // Anchura deseada para el modo rectangular
+        this.rectangularHeight = 1080; // Altura deseada para el modo rectangular
+        this.square = true;  // Inicialmente en modo cuadrado
         this.scaleRatio = 1;
         window.addEventListener('resize', () => this.resizeCanvas());
         this.resizeCanvas(); // Inicializar el tamaño al cargar
+    }
+
+    toggleSquareMode() {
+        this.square = !this.square;
+        this.resizeCanvas();
     }
 
     calculateScaleFactor() {
@@ -67,17 +75,42 @@ export class Resizer {
         this.platformManager.lineWidth *= scaleFactor;
     }
 
+    /*
     resizeCanvas() {
-        let newWidth = Math.max(window.innerWidth, 350);
-        newWidth = Math.min(newWidth, this.baseWidth);
+
+        //let newWidth = Math.max(window.innerWidth, 250);
+        //newWidth = Math.min(newWidth, this.baseWidth);
 
         const aspectRatio = this.baseHeight / this.baseWidth;
-        let newHeight = newWidth * aspectRatio;
+
+        //let newHeight = newWidth * aspectRatio;
+        let newHeight = Math.max(window.innerHeight, 250);
+        newHeight = Math.min(newHeight, this.baseHeight);
+
+
+        let newWidth = newHeight * aspectRatio;
 
         this.canvas.width = newWidth;
         this.canvas.height = newHeight;
 
         this.scaleGameElements();
     }
+*/
 
+    resizeCanvas() {
+        if (this.square) {
+            const minSize = Math.max(Math.min(window.innerWidth, window.innerHeight), 250);
+            this.canvas.width = minSize;
+            this.canvas.height = minSize;
+        } else {
+            let newWidth = Math.max(window.innerWidth, 250);
+            newWidth = Math.min(newWidth, this.rectangularWidth);
+            let newHeight = Math.max(window.innerHeight, 250);
+            newHeight = Math.min(newHeight, this.rectangularHeight);
+            this.canvas.width = newWidth;
+            this.canvas.height = newHeight;
+        }
+
+        this.scaleGameElements();
+    }
 }

@@ -13,6 +13,7 @@ export class Player {
         this.color = color;
         this.velocityX = 0;
         this.direction = 1;
+        // propiedades movidas a AnimationController
         this.currentFrame = 0; // Índice del frame actual
         this.animating = false; // Si está en proceso de animación
         this.frameInterval = 200; // Intervalo de tiempo para cambiar frames (ms)
@@ -35,6 +36,7 @@ export class Player {
     setMoving(arg) {
         this.isMoving = arg;
     }
+    //codigo movido a AnimationController
     setAnimating(value) {
         this.animating = value;
     }

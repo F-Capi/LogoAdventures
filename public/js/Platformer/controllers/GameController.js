@@ -59,9 +59,7 @@ loader.addImage("globo", "../artArchive/globo.png");
 window.onload = function () {
     loader.loadAll(() => {
         const canvas = document.getElementById('gameCanvas');
-        renderer = new Renderer(canvas, loader.getImage("player"));
         player = new Player(300, 150, 30, '#39ff14');
-
         terminalObject = new Interactive(355, 175, loader.getImage("computer"), 50, 50);
         let terminalObject2 = new Interactive(800, 180, loader.getImage("computer"), 50, 50);
         let globo = new GameObject(355, 125, loader.getImage("globo"), 50, 50, false);
@@ -77,6 +75,8 @@ window.onload = function () {
         physicsEngine = new PhysicsEngine(platformManager.platforms);
         resizer = new Resizer(canvas, player, platformManager, gameObjects);
         anim = new AnimationController(player);
+
+        renderer = new Renderer(canvas, loader.getImage("player"), player);
         lastFrameTime = Date.now();
 
         gameLoop();
