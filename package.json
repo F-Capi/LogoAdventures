@@ -1,5 +1,15 @@
 {
   "dependencies": {
-    "blockly": "^10.2.2"
-  }
+    "blockly": "^10.2.2",
+    "express": "^4.19.2"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "logoadventures",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
